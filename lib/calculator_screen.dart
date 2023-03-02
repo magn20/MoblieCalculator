@@ -7,9 +7,9 @@ import 'Calculator.dart';
 class CalculatorScreen extends State<MyHomePage> {
   String output = "";
   String result = "";
+  var resultList = [];
 
   var num1;
-
   var num2;
 
   MyStack stack = MyStack();
@@ -71,279 +71,204 @@ class CalculatorScreen extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "$output",
-          style: TextStyle(
-            fontSize: 22,
+        appBar: AppBar(
+          title: Text(
+            "Magnus RPN Calculator",
+            style: TextStyle(
+              fontSize: 22,
+            ),
           ),
         ),
-        actions: [
-          Text(
-            "$result",
-            style: TextStyle(fontSize: 30),
-          )
-        ],
-      ),
-      body: Row(
-        children: [
+        body: Column(
+          children: [buildScreen(), buildCalculator()],
+        ));
+  }
+
+  Row buildCalculator() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [buildNumberAutomatic(), buildOperations()],
+    );
+  }
+
+  Widget buildScreen() {
+    return Expanded(
+        child: Column(
+      children: [
           Expanded(
-            flex: 8,
-            child: GridView.count(
-              crossAxisCount: 3,
-              children: [
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("1");
-                      },
-                      child: const Text(
-                        "1",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("2");
-                      },
-                      child: const Text(
-                        "2",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("3");
-                      },
-                      child: const Text(
-                        "3",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("4");
-                      },
-                      child: const Text(
-                        "4",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("5");
-                      },
-                      child: const Text(
-                        "5",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("6");
-                      },
-                      child: const Text(
-                        "6",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("7");
-                      },
-                      child: const Text(
-                        "7",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("8");
-                      },
-                      child: const Text(
-                        "8",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("9");
-                      },
-                      child: const Text(
-                        "9",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("0");
-                      },
-                      child: const Text(
-                        "0",
-                        style: TextStyle(fontSize: 55),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        enter(output);
-                      },
-                      child: const Text(
-                        "Enter",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              child: ListView(reverse: true,
+                children: List.generate(
+                  stack.stack().length,
+                      (index) {
+                    return Align(alignment: Alignment.bottomRight,child: Text(stack.stack()[index], style: TextStyle(fontSize: 30),));
+                  },
+                ).reversed.toList(),
+              ),
+          ),
+          Align(alignment: Alignment.bottomRight,
+            child: Text(
+              "$output",
+              style: TextStyle(fontSize: 30),
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: GridView.count(
-              crossAxisCount: 1,
-              children: [
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        backspace();
-                      },
-                      child: const Icon(Icons.backspace),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("+");
-                      },
-                      child: const Text(
-                        "+",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("-");
-                      },
-                      child: const Text(
-                        "-",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("*");
-                      },
-                      child: const Text(
-                        "*",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        insertInput("/");
-                      },
-                      child: const Text(
-                        "/",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          stack.clear();
-                          output = "";
-                          result = "";
-                        });
-                      },
-                      child: const Text(
-                        "c",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      ],
+    ));
+  }
+
+  Expanded buildOperations() {
+    return Expanded(
+      flex: 2,
+      child: GridView.count(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        crossAxisCount: 1,
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  backspace();
+                },
+                child: const Icon(Icons.backspace),
+              ),
             ),
-          )
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  insertInput("+");
+                },
+                child: const Text(
+                  "+",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  insertInput("-");
+                },
+                child: const Text(
+                  "-",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  insertInput("*");
+                },
+                child: const Text(
+                  "*",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  insertInput("/");
+                },
+                child: const Text(
+                  "/",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(style: ElevatedButton.styleFrom(primary: Colors.black12),
+                onPressed: () {
+                  setState(() {
+                    stack.clear();
+                    output = "";
+                    result = "";
+                  });
+                },
+                child: const Text(
+                  "c",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Expanded buildNumberAutomatic() {
+    return Expanded(
+      flex: 8,
+      child: GridView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          var num = index;
+          num++;
+          if (index == 9) {
+            return Divider();
+          }
+          if (index == 10) {
+            num = 0;
+          }
+          if (index == 11) {
+            return Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(style: ElevatedButton.styleFrom(primary: Colors.red),
+                  onPressed: () {
+                    enter(output);
+                  },
+                  child: const Text(
+                    "Enter",
+                    style: TextStyle(fontSize: 22),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return Container(
+            width: 100,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton( style: ElevatedButton.styleFrom(primary: Colors.red),
+                onPressed: () {
+                  insertInput(num.toString());
+                },
+                child: Text(
+                  "$num",
+                  style: TextStyle(fontSize: 55),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
