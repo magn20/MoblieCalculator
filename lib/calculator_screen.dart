@@ -97,6 +97,7 @@ class CalculatorScreen extends State<MyHomePage> {
       children: [
           Expanded(
               child: ListView(reverse: true,
+                padding : EdgeInsets.only(top: 50),
                 children: List.generate(
                   stack.stack().length,
                       (index) {
